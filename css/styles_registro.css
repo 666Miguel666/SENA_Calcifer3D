@@ -1,0 +1,457 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+    flex-direction: column;
+    display: flex;
+    
+    background: radial-gradient(circle at 20% 20%, rgba(255, 60, 0, 0.15), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(255, 140, 0, 0.12), transparent 40%),
+                linear-gradient(160deg, #0a0a0a, #121212, #0d0d0d);
+
+    background-attachment: fixed;
+    color: white;
+}
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.navbar {
+    background-color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    margin: 30px 40px;
+    border-radius: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+
+/* 🔥 Nombre central */
+.brand-name {
+    font-size: 30px;
+    font-weight: bold;
+    font-family: 'Impact', sans-serif;
+    letter-spacing: 2px;
+
+    background: linear-gradient(45deg, #ff6600, #ff0000, #ffcc00);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* 🔥 BORDE NEGRO */
+    -webkit-text-stroke: 1.5px black;
+
+    /* 🔥 Brillo controlado */
+   text-shadow:
+     2px 2px 0 black,
+     -2px -2px 0 black,
+     2px -2px 0 black,
+     -2px 2px 0 black,
+     0 0 10px #ff6600;
+
+    animation: flame 1.5s infinite alternate;
+}
+
+/* 🔥 Animación tipo fuego */
+@keyframes flame {
+    0% {
+        text-shadow:
+            0 0 5px #ff6600,
+            0 0 10px #ff0000,
+            0 0 20px #ff3300;
+    }
+    100% {
+        text-shadow:
+            0 0 10px #ffcc00,
+            0 0 20px #ff6600,
+            0 0 30px #ff0000;
+    }
+}
+.logo img {
+    height: 100px;
+}
+
+.nav-links li{
+    text-decoration: none;
+    color: #ff6600; /* Naranja */
+    font-weight: bold;
+    position: relative;
+    padding: 8px 15px;
+    transition: 0.3s ease;
+}
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #ff6600; /* Naranja */
+    font-weight: bold;
+    position: relative;
+    padding: 8px 15px;
+    transition: 0.3s ease;
+}
+
+/* Cambio de color */
+.nav-links a:hover {
+    color: #ff0000; /* Rojo */
+}
+
+/* 🔥 Efecto llama */
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(45deg, orange, red, yellow);
+    z-index: -1;
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.3s ease-in-out;
+}
+
+.nav-links a:hover::after {
+    opacity: 1;
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.main-container {
+    display: flex;
+    margin: 0 40px 40px 40px;
+    border-radius: 35px;
+    overflow: hidden;
+    gap: 0;
+    flex: 1;
+}
+
+/* ===== LADO IMAGEN ===== */
+.image-side {
+    flex: 1.3;
+
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+        url("../img/3b6c81dc-2edf-4eda-8334-f6a26393d361.png");
+
+    background-size: cover;        /* 🔥 Cubre todo */
+    background-position: center 40%;   /* Centra la imagen */
+    background-repeat: no-repeat;  /* Evita repeticiones */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 60px;
+}
+
+
+.image-side h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #ff3c00;
+}
+
+/* ===== LADO FORMULARIO ===== */
+.form-side {
+    flex: 0.9;
+    background: rgba(17,17,17,0.95);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    position: relative;
+}
+
+/* ===== CONTENEDOR FORM ===== */
+.container {
+    width: 100%;
+    max-width: 450px;
+}
+
+/* ===== FORMULARIO ===== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+label {
+    font-size: 0.9rem;
+}
+
+input, select {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: white;
+    font-size: 0.9rem;
+    transition: border 0.3s;
+}
+
+input:focus, select:focus {
+    border: 1px solid #ff3c00;
+    outline: none;
+}
+
+/* ===== BOTON ===== */
+button {
+    margin-top: 15px;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #ff3c00;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #ff8c00;
+}
+
+/* ===== MENSAJES DE ERROR Y ÉXITO ===== */
+.error-message {
+    color: #ff4c00;
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+.success-message {
+    color: #00ff88;
+    font-size: 1rem;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .main-container {
+        flex-direction: column;
+        margin: 20px;
+    }
+
+    .image-side {
+        min-height: 250px;
+    }
+}
+.footer {
+    background: #0f0f0f;
+    color: #ffffff;
+    padding: 60px 10%;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+}
+
+.footer-col h3,
+.footer-col h4 {
+    margin-bottom: 15px;
+    color: var(--color-principal); /* usa tu color principal */
+}
+
+.footer-col p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #b3b3b3;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+    text-decoration: none;
+    color: #b3b3b3;
+    transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+    color: var(--color-principal);
+}
+
+.social-icons a {
+    display: block;
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: #b3b3b3;
+    transition: 0.3s;
+}
+
+.social-icons a:hover {
+    color: var(--color-principal);
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #222;
+    font-size: 13px;
+    color: #888;
+}
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    width: 45px;
+    height: 45px;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    transition: 0.3s ease;
+    border: 1px solid #ff3c00;
+}
+
+.social-icons a:hover {
+    background: #ff3c00;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 60, 0, 0.5);
+}
+section {
+    margin: 0 40px 60px 40px;
+}
+
+.social-icons a:nth-child(1):hover { background: #E4405F; } /* Instagram */
+.social-icons a:nth-child(2):hover { background: #1877F2; } /* Facebook */
+.social-icons a:nth-child(3):hover { background: #25D366; } /* WhatsApp */
+
+/* ===== RESPONSIVE REGISTRO ===== */
+@media (max-width: 768px) {
+
+    .main-container {
+        flex-direction: column;
+        margin: 20px;
+        min-height: auto;
+        height: auto;
+    }
+
+    .image-side {
+        flex: none;
+        width: 100%;
+        min-height: 35vh;
+        background-position: center;
+        padding-top: 40px;
+    }
+
+    .image-side h1 {
+        font-size: 1.6rem;
+        padding: 0 15px;
+    }
+
+    .form-side {
+        flex: none;
+        width: 100%;
+        padding: 30px 20px;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+}
+
+/* 🔥 HAMBURGUESA */
+
+.menu-toggle {
+    display: none;
+    font-size: 28px;
+    color: #ff6600;
+    cursor: pointer;
+}
+
+/* 🔥 RESPONSIVE NAVBAR */
+@media (max-width: 900px) {
+
+    .navbar {
+        padding: 15px 20px;
+        margin: 20px;
+    }
+
+    .brand-name {
+        font-size: 22px;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: #000;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 0;
+        border-radius: 0 0 20px 20px;
+        display: none;
+        animation: slideDown 0.3s ease;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links a {
+        display: block;
+        width: 100%;
+    }
+
+    .navbar {
+        position: relative;
+    }
+
+}
+
+/* 🔥 Animación */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,498 @@
+:root {
+    --color-primary: #ff6a00;
+    --color-success: #28a745;
+    --color-danger: #dc3545;
+    --color-bg: #f4f4f4;
+    --color-surface: #ffffff;
+    --color-muted: #f9f9f9;
+    --color-border: #dddddd;
+    --color-text-soft: #666666;
+    --color-sidebar: #111111;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --space-1: 8px;
+    --space-2: 12px;
+    --space-3: 16px;
+    --space-4: 20px;
+    --space-5: 30px;
+    --space-6: 40px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: var(--color-bg);
+    color: #222222;
+}
+
+/* Layout */
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background: var(--color-sidebar);
+    color: #ffffff;
+    padding: var(--space-4);
+    flex-shrink: 0;
+}
+
+.content {
+    flex: 1;
+    background: var(--color-surface);
+    padding: var(--space-6);
+    overflow-y: auto;
+}
+
+/* Sidebar */
+.logo h2,
+.brand {
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.brand {
+    white-space: nowrap;
+}
+
+.rol,
+.profile-role {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-5) 0 0;
+}
+
+.menu li {
+    padding: var(--space-2);
+    margin-bottom: 5px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.menu li:hover,
+.menu li.active {
+    background: var(--color-primary);
+}
+
+/* Perfil */
+.profile-box {
+    text-align: center;
+    margin-bottom: var(--space-5);
+}
+
+.profile-img {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--color-primary);
+}
+
+.profile-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    margin: 5px 0 0;
+    font-size: 16px;
+}
+
+/* Vistas */
+.view {
+    display: none;
+}
+
+.active-view {
+    display: block;
+}
+
+/* Contenedores y tarjetas */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-4);
+}
+
+.card,
+.card-resumen,
+.card-reporte,
+.kpi-card,
+.resumen-box {
+    background: var(--color-muted);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+}
+
+.card,
+.card-resumen,
+.card-reporte,
+.kpi-card {
+    border-left: 5px solid var(--color-primary);
+}
+
+.card h3,
+.card-resumen h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.card p {
+    margin-top: 10px;
+    font-size: 22px;
+    color: var(--color-primary);
+}
+
+.card-resumen p,
+.card-reporte p,
+.kpi-card p {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.big-number {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.kpi-sub {
+    font-size: 12px;
+    color: var(--color-text-soft);
+}
+
+.utilidad,
+.card-reporte.utilidad,
+.kpi-card.utilidad {
+    border-left-color: var(--color-success);
+}
+
+.kpi-card.egreso {
+    border-left-color: var(--color-danger);
+}
+
+/* Grillas resumen */
+.resumen-contable,
+.resumen-reportes,
+.kpi-grid,
+.resumen-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+
+.resumen-box {
+    min-width: 0;
+}
+
+/* Formularios */
+.venta-form-container {
+    background: var(--color-muted);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-5);
+    border-left: 5px solid var(--color-primary);
+}
+
+.venta-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.venta-form input,
+.venta-form select,
+.filtro-fecha input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+}
+
+.filtro-fecha {
+    margin-bottom: var(--space-4);
+}
+
+/* Botones */
+.btn,
+.btn-ver,
+.btn-editar {
+    border: none;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.btn {
+    padding: 10px 15px;
+    margin-right: 10px;
+    background: var(--color-primary);
+}
+
+.btn-ver,
+.btn-editar {
+    padding: 6px 10px;
+}
+
+.btn-ver {
+    background: #333333;
+}
+
+.btn-editar {
+    background: var(--color-primary);
+    margin-left: 5px;
+}
+
+.btn:hover,
+.btn-ver:hover,
+.btn-editar:hover {
+    opacity: 0.85;
+}
+
+/* Busqueda inventario */
+.inventario-tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+}
+
+#buscarInventario {
+    width: 100%;
+    max-width: 440px;
+    padding: 11px 12px;
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    font-size: 14px;
+}
+
+#buscarInventario:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(255, 106, 0, 0.18);
+}
+
+.inventario-resultado {
+    font-size: 13px;
+    color: var(--color-text-soft);
+    white-space: nowrap;
+}
+
+/* Tablas */
+.tabla-container {
+    background: var(--color-surface);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+}
+
+table,
+#tablaProductos {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td,
+#tablaProductos th,
+#tablaProductos td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #eeeeee;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+th {
+    background: #f1f1f1;
+}
+
+#tablaProductos thead {
+    background: var(--color-primary);
+    color: #ffffff;
+}
+
+#tablaProductos {
+    min-width: 900px;
+}
+
+/* Indicadores */
+.indicadores,
+.indicadores-dashboard,
+.acciones-contables,
+.acciones-reportes {
+    margin-top: var(--space-5);
+}
+
+.indicador,
+.indicador-card {
+    margin-bottom: 20px;
+}
+
+.barra {
+    width: 100%;
+    height: 10px;
+    margin: 8px 0;
+    background: #eeeeee;
+    border-radius: 5px;
+}
+
+.progreso {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 5px;
+}
+
+.progreso.verde {
+    background: var(--color-success);
+}
+
+.progreso.rojo {
+    background: var(--color-danger);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .content {
+        padding: var(--space-5);
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 132px;
+        min-width: 132px;
+        padding: var(--space-3);
+    }
+
+    .brand {
+        font-size: 1.25rem;
+    }
+
+    .content {
+        padding: var(--space-4);
+    }
+
+    .menu {
+        display: block;
+        margin-top: var(--space-3);
+    }
+
+    .menu li {
+        margin-bottom: 6px;
+        text-align: left;
+        font-size: 12px;
+        padding: 10px 8px;
+        line-height: 1.2;
+    }
+
+    .cards,
+    .resumen-contable,
+    .resumen-reportes,
+    .kpi-grid,
+    .resumen-dashboard {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+
+    .venta-form {
+        grid-template-columns: 1fr;
+    }
+
+    .inventario-tools {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+    }
+
+    #buscarInventario {
+        max-width: none;
+    }
+
+    .inventario-resultado {
+        white-space: normal;
+    }
+
+    .btn,
+    .btn-ver,
+    .btn-editar {
+        font-size: 12px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: var(--space-1);
+    }
+
+    #tablaProductos th,
+    #tablaProductos td {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: var(--space-3);
+    }
+
+    .sidebar {
+        width: 124px;
+        min-width: 124px;
+        padding: var(--space-2);
+    }
+
+    .brand {
+        font-size: 1.05rem;
+    }
+
+    .profile-box {
+        margin-bottom: var(--space-3);
+    }
+
+    .profile-img {
+        width: 56px;
+        height: 56px;
+    }
+
+    .profile-name,
+    .profile-role,
+    .rol {
+        font-size: 11px;
+    }
+
+    .card p,
+    .big-number,
+    .card-resumen p,
+    .card-reporte p,
+    .kpi-card p {
+        font-size: 18px;
+    }
+
+    .tabla-container {
+        padding: var(--space-2);
+    }
+}
