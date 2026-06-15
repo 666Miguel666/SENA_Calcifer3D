@@ -895,35 +895,33 @@ button {
     color: #333333;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 15px;
-}
+
 
 .form-grid .full {
     grid-column: 1 / -1;
 }
 
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
 .form-grid label {
-    color: #555555;
-    font-weight: 500;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 .config-card input,
 .config-card select {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 4px;
-    border: 1px solid #e0e0e0;
-    background: #ffffff;
-    color: #333333;
-    font-family: 'Poppins', sans-serif;
-    transition: 0.3s ease;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
 }
+
+
 
 .config-card input:focus,
 .config-card select:focus {
