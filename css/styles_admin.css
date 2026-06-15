@@ -963,6 +963,7 @@ button {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    margin-top: 25px;
 }
 
 .form-message {
@@ -971,6 +972,10 @@ button {
     font-size: 13px;
     padding: 8px 12px;
     border-radius: 4px;
+}
+
+.form-message:empty {
+    display: none;
 }
 
 .form-message.success {
@@ -996,6 +1001,7 @@ button {
     margin-bottom: 10px;
 }
 
+
 .btn-danger {
     background: #dc3545;
     color: white;
@@ -1009,7 +1015,8 @@ button {
     background: #555;
     color: white;
     border: none;
-    padding: 8px 18px;
+    width:120px;
+    height:30px;
     border-radius: 6px;
     margin-right: 10px;
     cursor: pointer;
