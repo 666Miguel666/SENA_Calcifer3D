@@ -120,7 +120,18 @@ chatForm.addEventListener("submit", (event) => {
 
     const botBubble = document.createElement("div");
     botBubble.className = "chat-message bot";
-    botBubble.textContent = "Gracias. Un asesor te respondera pronto. Tambien puedes ir a Cotizar ahora.";
+    const lower = message.toLowerCase();
+    if (lower.includes("objetivo")) {
+        botBubble.innerHTML = "El objetivo de Calcifer 3D es ofrecer una solución integral de e-commerce y gestión empresarial para impresión 3D en Colombia.";
+    } else if (lower.includes("producto") || lower.includes("resina") || lower.includes("filamento")) {
+        botBubble.innerHTML = "Contamos con resinas Anycubic/Elegoo, filamentos PLA/PETG/ABS, repuestos y pinturas Vallejo. Mira nuestra sección de <a href='produtos.html' style='color:#ffaa55;'>Productos</a>.";
+    } else if (lower.includes("servicio") || lower.includes("reparacion") || lower.includes("taller")) {
+        botBubble.innerHTML = "Ofrecemos taller técnico especializado con más de 500 máquinas reparadas y clases de impresión 3D. Mira <a href='servicios.html' style='color:#ffaa55;'>Servicios</a>.";
+    } else if (lower.includes("contacto") || lower.includes("whatsapp")) {
+        botBubble.innerHTML = "WhatsApp: +57 300 123 4567 • Correo: contacto@calcifer3d.com";
+    } else {
+        botBubble.innerHTML = "¡Hola! Para consultas detalladas sobre arquitectura, endpoints o el proyecto SENA, visita nuestro <a href='chatbot.html' style='color:#ffaa55; font-weight:bold; text-decoration:underline;'>Chatbot Educativo Completo 🔥</a>.";
+    }
     chatMessages.appendChild(botBubble);
 
     chatMessages.scrollTop = chatMessages.scrollHeight;

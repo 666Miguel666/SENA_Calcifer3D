@@ -19,6 +19,7 @@
             <li><a href="index.html">Inicio</a></li>
             <li><a href="produtos.html">Productos</a></li>
             <li><a href="servicios.html" class="active">Servicios</a></li>
+            <li><a href="chatbot.html">Chatbot</a></li>
             <li><a href="registro.html">Registro</a></li>
             <li><a href="login.html">Ingreso</a></li>
         </ul>

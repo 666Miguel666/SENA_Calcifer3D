@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Educativo - Calcifer 3D</title>
+    <!-- Tipografía Poppins como en el proyecto -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        body {
+            /* Fondo oscuro con toque naranja característico de Calcifer 3D */
+            background: radial-gradient(circle at 50% 20%, rgba(255, 102, 0, 0.15), transparent 60%), #0d0e11;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+            color: #ffffff;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 420px;
+            height: 600px;
+            background: #17181d;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 102, 0, 0.35);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 102, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Encabezado con color del proyecto */
+        .chat-header {
+            background: linear-gradient(135deg, #ff6600, #ff3300);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 17px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-header span {
+            font-size: 11px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #101114;
+        }
+
+        .message {
+            padding: 10px 14px;
+            border-radius: 12px;
+            max-width: 82%;
+            font-size: 13.5px;
+            line-height: 1.45;
+            word-wrap: break-word;
+        }
+
+        /* Mensaje del usuario con el naranja del proyecto */
+        .user {
+            background: linear-gradient(135deg, #ff6600, #e65100);
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        /* Mensaje del bot con tono oscuro suave */
+        .bot {
+            background-color: #22242b;
+            color: #f1f1f1;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 3px solid #ff6600;
+        }
+
+        .input-area {
+            display: flex;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: #17181d;
+            padding: 8px;
+            gap: 8px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1px solid #2e3038;
+            border-radius: 10px;
+            outline: none;
+            background: #0f1013;
+            color: #ffffff;
+            font-size: 13.5px;
+        }
+
+        .input-area input:focus {
+            border-color: #ff6600;
+        }
+
+        .input-area button {
+            padding: 11px 18px;
+            background: linear-gradient(135deg, #ff6600, #ff3300);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13.5px;
+            transition: 0.2s ease;
+        }
+
+        .input-area button:hover {
+            background: linear-gradient(135deg, #ff7700, #e62e00);
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container" role="region" aria-label="Chat con el bot de Calcifer 3D">
+    
+    <!-- Encabezado con identidad del proyecto -->
+    <div class="chat-header">
+        <h2>🔥 Calcifer 3D Bot</h2>
+        <span>Proyecto SENA</span>
+    </div>
+
+    <!-- Contenedor de mensajes -->
+    <div class="messages" id="messages"></div>
+
+    <!-- Área de entrada -->
+    <div class="input-area">
+        <input type="text" id="userInput" aria-label="Escribe tu pregunta"
+               placeholder="Pregunta sobre productos, resinas, taller..." />
+        <button onclick="sendMessage()">Enviar</button>
+    </div>
+
+</div>
+
+<script>
+const messages = document.getElementById("messages");
+
+// Función para mostrar mensajes en la pantalla
+function addMessage(text, sender) {
+    const div = document.createElement("div");
+    div.classList.add("message", sender);
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+// Mensaje inicial de bienvenida al cargar
+window.onload = function() {
+    addMessage("¡Hola! Soy el asistente de Calcifer 3D 🔥. Pregúntame sobre nuestros productos, servicios de taller, filamentos, cotizaciones o contacto.", "bot");
+};
+
+// Lógica de preguntas y respuestas personalizadas para el proyecto Calcifer 3D
+function botResponse(input) {
+    const pregunta = input.toLowerCase();
+
+    // 0. Saludos
+    if (pregunta.includes("hola") || pregunta.includes("buenas") || pregunta.includes("buenos dias") || pregunta.includes("buenas tardes") || pregunta.includes("buenas noches")) {
+        return "¡Hola! Bienvenido a Calcifer 3D . Acá puedes encontrar todos los productos que necesites para tu trabajo. ¿Qué te interesa el día de hoy?";
+
+    // 1. Objetivo del proyecto
+    } else if (pregunta.includes("objetivo")) {
+        return "El objetivo de Calcifer 3D es ofrecer una solución integral de comercio y soporte técnico en impresión 3D (FDM y resina) para clientes en Colombia.";
+    
+    // 2. ¿Qué es Calcifer 3D?
+    } else if (pregunta.includes("que es") || pregunta.includes("quienes son")) {
+        return "Calcifer 3D es una tienda y taller especializado en impresión 3D: venta de filamentos, resinas, repuestos y servicio técnico. 'Si no lo tenemos, lo traemos por encargo'.";
+
+    // 3. Productos que venden
+    } else if (pregunta.includes("productos") || pregunta.includes("que venden")) {
+        return "Vendemos filamentos (PLA, PETG, ABS), resinas para impresión SLA/DLP, repuestos originales (pantallas LCD, fuentes, motores), películas FEP y pinturas Vallejo.";
+
+    // 4. Filamentos y Resinas
+    } else if (pregunta.includes("filamento") || pregunta.includes("resina")) {
+        return "Contamos con filamentos PLA, ABS, PETG y TPU de varios colores, así como resinas estándar, lavables al agua y de alta resistencia de marcas como Anycubic y Elegoo.";
+
+    // 5. Servicios y Mantenimiento / Taller
+    } else if (pregunta.includes("servicios") || pregunta.includes("mantenimiento") || pregunta.includes("reparacion") || pregunta.includes("taller")) {
+        return "Ofrecemos mantenimiento preventivo y correctivo para impresoras 3D FDM y de resina (+500 máquinas reparadas), asesorías personalizadas e impresión de piezas por encargo.";
+
+    // 6. Cotizaciones y Precios
+    } else if (pregunta.includes("cotizar") || pregunta.includes("precio") || pregunta.includes("presupuesto")) {
+        return "Puedes cotizar tu pieza o reparación directamente desde nuestra página en el botón 'Cotizar ahora' o enviando los detalles a nuestro WhatsApp.";
+
+    // 7. Envíos y Entregas
+    } else if (pregunta.includes("envios") || pregunta.includes("entrega") || pregunta.includes("domicilio")) {
+        return "Realizamos envíos seguros a toda Colombia. Además, tenemos opción de recogida en tienda física con un descuento especial.";
+
+    // 8. Contacto y Redes
+    } else if (pregunta.includes("contacto") || pregunta.includes("whatsapp") || pregunta.includes("telefono") || pregunta.includes("correo")) {
+        return "Puedes escribirnos al WhatsApp +57 300 123 4567 o al correo contacto@calcifer3d.com. También nos encuentras en Instagram como @calcifer._.3d.";
+
+    // 9. Tecnologías utilizadas en el sistema
+    } else if (pregunta.includes("tecnologias") || pregunta.includes("lenguajes") || pregunta.includes("flask") || pregunta.includes("python")) {
+        return "El sistema web del proyecto está desarrollado con Python (Flask) en el backend, MySQL con XAMPP en la base de datos, y HTML, CSS y JavaScript en el frontend.";
+
+    // 10. Despedida
+    } else if (pregunta.includes("salir") || pregunta.includes("adios") || pregunta.includes("gracias") || pregunta.includes("chao")) {
+        return "¡Gracias por consultar a Calcifer 3D! Éxitos en tus impresiones 3D. 👋🔥";
+
+    // Respuesta por defecto
+    } else {
+        return "No tengo respuesta para esa pregunta. Puedes preguntarme sobre: productos, filamentos, resinas, mantenimiento, cotizar, envíos o contacto.";
+    }
+}
+
+// Envío del mensaje del usuario y respuesta del bot
+function sendMessage() {
+    const input = document.getElementById("userInput");
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    // Pequeña pausa de 500ms para simular que el bot responde
+    setTimeout(() => {
+        const respuesta = botResponse(text);
+        addMessage(respuesta, "bot");
+    }, 500);
+}
+
+// Permite enviar con la tecla Enter
+document.getElementById("userInput").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+});
+</script>
+
+</body>
+</html>
