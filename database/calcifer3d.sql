@@ -28,10 +28,14 @@ CREATE TABLE proveedores (
 CREATE TABLE clientes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(150) NOT NULL,
+  tipo_documento VARCHAR(20),
+  documento VARCHAR(30),
+  genero VARCHAR(20),
   correo VARCHAR(150),
   telefono VARCHAR(30),
   direccion VARCHAR(255),
-  fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_clientes_correo (correo)
 ) ENGINE=InnoDB;
 
 CREATE TABLE usuarios (

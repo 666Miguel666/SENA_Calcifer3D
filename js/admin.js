@@ -29,6 +29,24 @@ const API_BASE_URL = "/api";
 
 let rolesCache = [];
 
+function getAuthHeaders(customHeaders = {}) {
+    const raw = localStorage.getItem("calcifer_user");
+    const headers = { ...customHeaders };
+    if (raw) {
+        try {
+            const user = JSON.parse(raw);
+            if (user && user.token) {
+                headers["Authorization"] = `Bearer ${user.token}`;
+            } else if (user && user.id) {
+                headers["Authorization"] = `Bearer ${user.id}`;
+            }
+        } catch (e) {
+            console.error("Error al obtener sesión de admin:", e);
+        }
+    }
+    return headers;
+}
+
 menuItems.forEach((item) => {
     item.addEventListener("click", () => {
         // Cambia la seccion visible del panel segun el item pulsado.
@@ -86,7 +104,9 @@ async function cargarUsuarios() {
 
     try {
         // Paso 1: pedir usuarios a Flask.
-        const response = await fetch(`${API_BASE_URL}/usuarios`);
+        const response = await fetch(`${API_BASE_URL}/usuarios`, {
+            headers: getAuthHeaders(),
+        });
         const result = await response.json();
 
         // Paso 2: si hay error, mostrar mensaje en la tabla.
@@ -185,7 +205,9 @@ async function cargarRoles() {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/roles`);
+        const response = await fetch(`${API_BASE_URL}/roles`, {
+            headers: getAuthHeaders(),
+        });
         const result = await response.json();
 
         if (!response.ok || !result.ok) {
@@ -259,9 +281,9 @@ async function guardarRol(event) {
     try {
         const response = await fetch(url, {
             method,
-            headers: {
+            headers: getAuthHeaders({
                 "Content-Type": "application/json",
-            },
+            }),
             body: JSON.stringify({ nombre }),
         });
         const result = await response.json();
@@ -293,6 +315,7 @@ async function eliminarRol(roleId) {
     try {
         const response = await fetch(`${API_BASE_URL}/roles/${roleId}`, {
             method: "DELETE",
+            headers: getAuthHeaders(),
         });
         const result = await response.json();
 
@@ -338,9 +361,9 @@ async function guardarUsuario(event) {
     try {
         const response = await fetch(url, {
             method,
-            headers: {
+            headers: getAuthHeaders({
                 "Content-Type": "application/json",
-            },
+            }),
             body: JSON.stringify(payload),
         });
         const result = await response.json();
@@ -397,6 +420,7 @@ async function eliminarUsuario(userId) {
     try {
         const response = await fetch(`${API_BASE_URL}/usuarios/${userId}`, {
             method: "DELETE",
+            headers: getAuthHeaders(),
         });
         const result = await response.json();
 

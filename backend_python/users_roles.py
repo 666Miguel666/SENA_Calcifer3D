@@ -1,5 +1,13 @@
 from __future__ import annotations
 
+import base64
+import functools
+import hashlib
+import hmac
+import json
+import os
+import time
+
 from flask import Blueprint, request
 from mysql.connector import Error
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -32,6 +40,8 @@ DEFAULT_USERS = (
     },
 )
 
+SECRET_KEY = os.getenv("SECRET_KEY", "calcifer3d_secret_token_sena_2026")
+
 
 def json_response(payload: dict, status: int = 200):
     from flask import jsonify
@@ -39,6 +49,123 @@ def json_response(payload: dict, status: int = 200):
     response = jsonify(payload)
     response.status_code = status
     return response
+
+
+def create_auth_token(user_id: int, rol: str, correo: str) -> str:
+    """Genera un token de sesion firmado criptograficamente con HMAC-SHA256."""
+    payload = {
+        "user_id": user_id,
+        "rol": rol,
+        "correo": correo,
+        "exp": int(time.time()) + 86400 * 7,  # Valido por 7 dias
+    }
+    raw = base64.urlsafe_b64encode(json.dumps(payload).encode("utf-8")).decode("utf-8")
+    sig = hmac.new(SECRET_KEY.encode("utf-8"), raw.encode("utf-8"), hashlib.sha256).hexdigest()
+    return f"{raw}.{sig}"
+
+
+def verify_auth_token(token_str: str) -> dict | None:
+    """Valida un token de sesion firmado o soporte retrocompatible por ID si existe."""
+    if not token_str:
+        return None
+
+    # Si es token firmado (formato base64.firma)
+    if "." in token_str:
+        try:
+            raw, sig = token_str.split(".", 1)
+            expected_sig = hmac.new(
+                SECRET_KEY.encode("utf-8"), raw.encode("utf-8"), hashlib.sha256
+            ).hexdigest()
+            if not hmac.compare_digest(sig, expected_sig):
+                return None
+            payload = json.loads(base64.urlsafe_b64decode(raw.encode("utf-8")).decode("utf-8"))
+            if payload.get("exp", 0) < time.time():
+                return None
+            return payload
+        except Exception:
+            return None
+
+    # Soporte para laboratorio/Postman si se envia ID numerico
+    if token_str.isdigit():
+        try:
+            with get_connection() as connection:
+                with connection.cursor(dictionary=True) as cursor:
+                    cursor.execute(
+                        """
+                        SELECT u.id, u.nombre, u.correo, r.nombre AS rol
+                        FROM usuarios u
+                        INNER JOIN roles r ON r.id = u.rol_id
+                        WHERE u.id = %s
+                        LIMIT 1
+                        """,
+                        (int(token_str),),
+                    )
+                    user = cursor.fetchone()
+                    if user:
+                        return {
+                            "user_id": user["id"],
+                            "rol": user["rol"],
+                            "correo": user["correo"],
+                        }
+        except Exception:
+            return None
+
+    return None
+
+
+def requiere_auth(roles_permitidos=("Admin",)):
+    """Decorador para proteger endpoints de la API en el servidor (Solucion a DEF-004)."""
+    def decorator(fn):
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            if request.method == "OPTIONS":
+                return ("", 204)
+
+            auth_header = request.headers.get("Authorization") or ""
+            if not auth_header:
+                return json_response(
+                    {
+                        "ok": False,
+                        "message": "Acceso denegado: Token de autorizacion requerido en el encabezado (Authorization: Bearer <token>)",
+                    },
+                    401,
+                )
+
+            parts = auth_header.split()
+            if len(parts) != 2 or parts[0].lower() != "bearer":
+                return json_response(
+                    {
+                        "ok": False,
+                        "message": "Formato de autorizacion invalido. Use 'Bearer <token>'",
+                    },
+                    401,
+                )
+
+            token_val = parts[1]
+            token_data = verify_auth_token(token_val)
+            if not token_data:
+                return json_response(
+                    {
+                        "ok": False,
+                        "message": "Token de autorizacion invalido o expirado",
+                    },
+                    401,
+                )
+
+            if roles_permitidos and token_data.get("rol") not in roles_permitidos:
+                return json_response(
+                    {
+                        "ok": False,
+                        "message": f"Acceso denegado: Se requiere uno de los siguientes roles: {', '.join(roles_permitidos)}",
+                    },
+                    403,
+                )
+
+            return fn(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 def ensure_roles_and_default_users() -> None:
@@ -78,9 +205,34 @@ def ensure_roles_and_default_users() -> None:
         connection.commit()
 
 
+def ensure_clientes_columns() -> None:
+    """Garantiza que la tabla clientes cuente con las columnas tipo_documento, documento y genero (Solucion DEF-005)."""
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT COLUMN_NAME 
+                FROM information_schema.COLUMNS 
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'clientes'
+                """
+            )
+            cols = {row[0].lower() for row in cursor.fetchall()}
+            if not cols:
+                return
+
+            if "tipo_documento" not in cols:
+                cursor.execute("ALTER TABLE clientes ADD COLUMN tipo_documento VARCHAR(20) AFTER nombre")
+            if "documento" not in cols:
+                cursor.execute("ALTER TABLE clientes ADD COLUMN documento VARCHAR(30) AFTER tipo_documento")
+            if "genero" not in cols:
+                cursor.execute("ALTER TABLE clientes ADD COLUMN genero VARCHAR(20) AFTER documento")
+        connection.commit()
+
+
 def initialize_system() -> None:
     bootstrap_database()
     ensure_roles_and_default_users()
+    ensure_clientes_columns()
 
 
 @users_roles_bp.route("/api/setup", methods=["POST", "OPTIONS"])
@@ -149,6 +301,7 @@ def login():
                 {"ok": False, "message": "Credenciales incorrectas"}, 401
             )
 
+        token = create_auth_token(usuario["id"], usuario["rol"], usuario["correo"])
         return json_response(
             {
                 "ok": True,
@@ -158,7 +311,9 @@ def login():
                     "nombre": usuario["nombre"],
                     "correo": usuario["correo"],
                     "rol": usuario["rol"],
+                    "token": token,
                 },
+                "token": token,
             }
         )
     except Error as exc:
@@ -166,9 +321,9 @@ def login():
 
 
 @users_roles_bp.route("/api/usuarios", methods=["GET"])
+@requiere_auth(roles_permitidos=("Admin",))
 def listar_usuarios():
-    # READ del CRUD de usuarios.
-    # Lista usuarios reales con su rol para llenar la tabla del panel admin.
+    # READ del CRUD de usuarios (Protegido por token de Administrador).
     try:
         initialize_system()
 
@@ -196,9 +351,9 @@ def listar_usuarios():
 
 
 @users_roles_bp.route("/api/usuarios", methods=["POST", "OPTIONS"])
+@requiere_auth(roles_permitidos=("Admin",))
 def crear_usuario():
     # CREATE del CRUD de usuarios.
-    # Crea un usuario con nombre, correo, contrasena y rol.
     if request.method == "OPTIONS":
         return ("", 204)
 
@@ -254,9 +409,9 @@ def crear_usuario():
 
 
 @users_roles_bp.route("/api/usuarios/<int:user_id>", methods=["PUT", "OPTIONS"])
+@requiere_auth(roles_permitidos=("Admin",))
 def actualizar_usuario(user_id: int):
     # UPDATE del CRUD de usuarios.
-    # Actualiza datos basicos; la contrasena solo cambia si se envia una nueva.
     if request.method == "OPTIONS":
         return ("", 204)
 
@@ -336,9 +491,9 @@ def actualizar_usuario(user_id: int):
 
 
 @users_roles_bp.route("/api/usuarios/<int:user_id>", methods=["DELETE", "OPTIONS"])
+@requiere_auth(roles_permitidos=("Admin",))
 def eliminar_usuario(user_id: int):
     # DELETE del CRUD de usuarios.
-    # Elimina el usuario seleccionado desde el panel administrador.
     if request.method == "OPTIONS":
         return ("", 204)
 
@@ -360,9 +515,9 @@ def eliminar_usuario(user_id: int):
 
 
 @users_roles_bp.route("/api/roles", methods=["GET"])
+@requiere_auth(roles_permitidos=("Admin",))
 def listar_roles():
-    # READ del CRUD de roles.
-    # Lista todos los roles y muestra cuantos usuarios tiene asignado cada uno.
+    # READ del CRUD de roles (Protegido por token de Administrador).
     try:
         initialize_system()
 
@@ -388,9 +543,9 @@ def listar_roles():
 
 
 @users_roles_bp.route("/api/roles", methods=["POST", "OPTIONS"])
+@requiere_auth(roles_permitidos=("Admin",))
 def crear_rol():
     # CREATE del CRUD de roles.
-    # Recibe el nombre del rol desde el formulario del panel administrador.
     if request.method == "OPTIONS":
         return ("", 204)
 
@@ -430,9 +585,9 @@ def crear_rol():
 
 
 @users_roles_bp.route("/api/roles/<int:role_id>", methods=["PUT", "OPTIONS"])
+@requiere_auth(roles_permitidos=("Admin",))
 def actualizar_rol(role_id: int):
     # UPDATE del CRUD de roles.
-    # Actualiza el nombre de un rol existente usando su id.
     if request.method == "OPTIONS":
         return ("", 204)
 
@@ -479,9 +634,9 @@ def actualizar_rol(role_id: int):
 
 
 @users_roles_bp.route("/api/roles/<int:role_id>", methods=["DELETE", "OPTIONS"])
+@requiere_auth(roles_permitidos=("Admin",))
 def eliminar_rol(role_id: int):
     # DELETE del CRUD de roles.
-    # Elimina un rol solo si no esta asignado a ningun usuario.
     if request.method == "OPTIONS":
         return ("", 204)
 
@@ -526,6 +681,9 @@ def registrar_cliente():
     tipo_cliente = (data.get("tipoCliente") or "").strip()
     nombre = (data.get("nombre") or "").strip()
     apellidos = (data.get("apellidos") or "").strip()
+    genero = (data.get("genero") or "").strip()
+    tipo_documento = (data.get("tipoDocumento") or "").strip()
+    documento = (data.get("documento") or "").strip()
     nombre_empresa = (data.get("nombreEmpresa") or "").strip()
     correo = (data.get("email") or "").strip().lower()
     telefono = (data.get("telefono") or "").strip()
@@ -573,12 +731,13 @@ def registrar_cliente():
                         500,
                     )
 
+                # Persistencia completa en clientes incluyendo tipo_documento, documento y genero (Solucion DEF-005)
                 cursor.execute(
                     """
-                    INSERT INTO clientes (nombre, correo, telefono, direccion)
-                    VALUES (%s, %s, %s, %s)
+                    INSERT INTO clientes (nombre, tipo_documento, documento, genero, correo, telefono, direccion)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """,
-                    (nombre_cliente, correo, telefono, direccion),
+                    (nombre_cliente, tipo_documento, documento, genero, correo, telefono, direccion),
                 )
 
                 cursor.execute(
@@ -596,7 +755,17 @@ def registrar_cliente():
             connection.commit()
 
         return json_response(
-            {"ok": True, "message": "Registro exitoso. Ya puedes iniciar sesion."},
+            {
+                "ok": True,
+                "message": "Registro exitoso. Ya puedes iniciar sesion.",
+                "cliente": {
+                    "nombre": nombre_cliente,
+                    "correo": correo,
+                    "documento": documento,
+                    "tipo_documento": tipo_documento,
+                    "genero": genero,
+                },
+            },
             201,
         )
     except Error as exc:

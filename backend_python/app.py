@@ -32,7 +32,7 @@ def add_cors_headers(response):
     # Permite que el frontend haga peticiones a la API incluso
     # si en algun momento se abre desde otra ruta o puerto.
     response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With"
     response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
     return response
 
