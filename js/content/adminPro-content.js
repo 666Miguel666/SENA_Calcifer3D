@@ -157,136 +157,503 @@
 
 </section>
 
-        <section id="inventario" class="content-section">
+
+<section id="inventario" class="content-section">
     <div class="section-header">
-        <h2>Inventario</h2>
-        <button class="btn-primary">+ Agregar producto</button>
+        <h2>Inventario de productos</h2>
+        <button class="btn-primary" id="addProductButton">
+            <i class="fas fa-plus"></i> Agregar producto
+        </button>
     </div>
 
-    <div class="section-filters">
-        <input type="text" placeholder="Buscar producto...">
-        <select>
-            <option>Todas las categorías</option>
-            <option>Periféricos</option>
-            <option>Componentes</option>
-        </select>
-        
+<form id="productForm" class="config-card product-form">
+    <h3>Registrar producto</h3>
+
+    <div class="form-grid">
+        <div>
+            <label for="productName">Nombre del producto *</label>
+            <input type="text" id="productName" maxlength="150" required>
+        </div>
+
+        <div>
+            <label for="productBrand">Marca</label>
+            <input type="text" id="productBrand" maxlength="120">
+        </div>
+
+        <div>
+            <label for="productColor">Color</label>
+            <input type="text" id="productColor" maxlength="80">
+        </div>
+
+        <div>
+            <label for="productCategory">Categoría</label>
+            <select id="productCategory">
+                <option value="">Sin categoría</option>
+            </select>
+        </div>
+
+        <div class="full">
+            <label for="productDescription">Descripción</label>
+            <textarea id="productDescription" rows="3"></textarea>
+        </div>
+
+        <div>
+            <label for="productQuantity">Cantidad inicial *</label>
+            <input type="number" id="productQuantity" min="0" step="1" value="0" required>
+        </div>
+
+        <div>
+            <label for="productLocation">Ubicación física</label>
+            <select id="productLocation">
+                <option value="">Sin ubicación</option>
+                <optgroup label="Estanterías principales">
+                    <option>EST-01-N1</option><option>EST-01-N2</option><option>EST-01-N3</option>
+                    <option>EST-02-N1</option><option>EST-02-N2</option><option>EST-02-N3</option>
+                    <option>EST-03-N1</option><option>EST-03-N2</option><option>EST-03-N3</option>
+                    <option>EST-04-N1</option><option>EST-04-N2</option><option>EST-04-N3</option>
+                    <option>EST-05-N1</option><option>EST-05-N2</option><option>EST-05-N3</option>
+                    <option>EST-06-N1</option><option>EST-06-N2</option><option>EST-06-N3</option>
+                </optgroup>
+                <optgroup label="Estanterías pequeñas">
+                    <option>EST-P01-N1</option><option>EST-P01-N2</option>
+                    <option>EST-P01-N3</option><option>EST-P01-N4</option><option>EST-P01-N5</option>
+                    <option>EST-P02-N1</option><option>EST-P02-N2</option>
+                    <option>EST-P02-N3</option><option>EST-P02-N4</option><option>EST-P02-N5</option>
+                </optgroup>
+                <optgroup label="Organizadores">
+                    <option>ORG-CAJ-01</option><option>ORG-CAJ-02</option>
+                    <option>ORG-CAJ-03</option><option>ORG-CAJ-04</option>
+                    <option>ORG-CAJ-05</option><option>ORG-CAJ-06</option>
+                    <option>ORG-CAJ-07</option><option>ORG-CAJ-08</option>
+                    <option>ORG-CAJ-09</option><option>ORG-CAJ-10</option>
+                    <option>ORG-CAJ-11</option><option>ORG-CAJ-12</option>
+                    <option>ORG-CAJ-13</option><option>ORG-CAJ-14</option>
+                    <option>ORG-CAJ-15</option><option>ORG-CAJ-16</option>
+                    <option>ORG-CAJ-17</option><option>ORG-CAJ-18</option>
+                    <option>ORG-CAJ-19</option><option>ORG-CAJ-20</option>
+                    <option>ORG-CAJ-21</option><option>ORG-CAJ-22</option>
+                    <option>ORG-CAJ-23</option><option>ORG-CAJ-24</option>
+                    <option>ORG-CAJ-25</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div>
+            <label for="productPurchasePrice">Precio de compra</label>
+            <input type="number" id="productPurchasePrice" min="0" step="0.01" value="0">
+        </div>
+
+        <div>
+            <label for="productPhysicalPrice">Precio físico</label>
+            <input type="number" id="productPhysicalPrice" min="0" step="0.01" value="0">
+        </div>
+
+        <div>
+            <label for="productSocialPrice">Precio redes</label>
+            <input type="number" id="productSocialPrice" min="0" step="0.01" value="0">
+        </div>
+
+        <div>
+            <label for="productMarketplacePrice">Precio Mercado Libre</label>
+            <input type="number" id="productMarketplacePrice" min="0" step="0.01" value="0">
+        </div>
+
+        <div class="full">
+            <label for="productPhoto">Fotografía del producto</label>
+
+            <input
+                type="file"
+                id="productPhoto"
+                accept="image/jpeg,image/png,image/webp"
+            >
+
+            <div id="productPhotoPreview" class="product-photo-preview">
+                <img
+                    id="productPhotoPreviewImage"
+                    src=""
+                    alt="Vista previa del producto"
+                    hidden
+                >
+                <p id="productPhotoPreviewText">
+                    Selecciona una fotografía para visualizarla aquí.
+                </p>
+        </div>
+</div>
     </div>
 
-    <table class="admin-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Producto</th>
-                <th>Categoría</th>
-                <th>Stock</th>
-                <th>Precio</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="inventarioTableBody">
-            <tr>
-                <td>001</td>
-                <td>Resina Anycubic</td>
-                <td>Resinas</td>
-                <td>25</td>
-                <td>$80.000</td>
-                <td>
-                    <button class="btn-edit">Editar</button>
-                    <button class="btn-delete">Eliminar</button>
-                </td>
-            </tr>
-                        <tr>
-                <td>002</td>
-                <td>Anycubic M7 PRO</td>
-                <td>Maquinas</td>
-                <td>25</td>
-                <td>$5.850.000</td>
-                <td>
-                    <button class="btn-edit">Editar</button>
-                    <button class="btn-delete">Eliminar</button>
-                </td>
-            </tr>
-                        <tr>
-                <td>003</td>
-                <td>Elegoo Mars 5 Ultra</td>
-                <td>Maquinas</td>
-                <td>25</td>
-                <td>$3.000.000</td>
-                <td>
-                    <button class="btn-edit">Editar</button>
-                    <button class="btn-delete">Eliminar</button>
-                </td>
-            </tr>
-                        <tr>
-                <td>004</td>
-                <td>Vallejo Primer</td>
-                <td>Pinturas</td>
-                <td>25</td>
-                <td>$180.000</td>
-                <td>
-                    <button class="btn-edit">Editar</button>
-                    <button class="btn-delete">Eliminar</button>
-                </td>
-            </tr>
-                        <tr>
-                <td>005</td>
-                <td>Filtro de Aire Anycubic</td>
-                <td>Accesorios</td>
-                <td>25</td>
-                <td>$145.000</td>
-                <td>
-                    <button class="btn-edit">Editar</button>
-                    <button class="btn-delete">Eliminar</button>
-                </td>
-            </tr>
-                        <tr>
-                <td>006</td>
-                <td>Lampara de luz UV</td>
-                <td>Accesorios</td>
-                <td>25</td>
-                <td>$100.000</td>
-                <td>
-                    <button class="btn-edit">Editar</button>
-                    <button class="btn-delete">Eliminar</button>
-                </td>
-            </tr>
-                        <tr>
-                <td>007</td>
-                <td>Resina de componente</td>
-                <td>Resinas</td>
-                <td>25</td>
-                <td>$120.000</td>
-                <td>
-                    <button class="btn-edit">Editar</button>
-                    <button class="btn-delete">Eliminar</button>
-                </td>
-            </tr>
-                        <tr>
-                <td>008</td>
-                <td>Lamina Fep</td>
-                <td>Consumibles</td>
-                <td>25</td>
-                <td>$50.000</td>
-                <td>
-                    <button class="btn-edit">Editar</button>
-                    <button class="btn-delete">Eliminar</button>
-                </td>
-            </tr>
-                        <tr>
-                <td>009</td>
-                <td>Resina Sunlu Standard</td>
-                <td>resinas</td>
-                <td>25</td>
-                <td>$70.000</td>
-                <td>
-                    <button class="btn-edit">Editar</button>
-                    <button class="btn-delete">Eliminar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="form-actions">
+        <button type="submit" class="btn-primary" id="productSubmitButton">
+            Guardar producto
+        </button>
+        <button type="button" class="btn-secondary" id="productCancelButton">
+            Cancelar
+        </button>
+    </div>
+
+    <p class="form-message" id="productMessage"></p>
+</form>
+
+
+<div class="section-filters">
+    <input
+        type="text"
+        id="buscarProducto"
+        placeholder="Buscar por nombre, marca, descripción o categoría..."
+    >
+
+    <select id="filtroCategoria">
+        <option value="">Todas las categorías</option>
+    </select>
+
+    <button
+        type="button"
+        class="btn-primary"
+        id="manageCategoriesButton">
+        <i class="fas fa-tags"></i> Categorías
+    </button>
+</div>
+
+
+    <div id="inventarioMessage"></div>
+
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Imagen</th>
+                    <th>Producto</th>
+                    <th>Marca</th>
+                    <th>Categoría</th>
+                    <th>Stock</th>
+                    <th>Precio físico</th>
+                    <th>Ubicación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="inventarioTableBody">
+                <tr>
+                    <td colspan="9">Cargando inventario...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<!-- Modal personalizado para confirmar la eliminación de productos -->
+<div id="modalEliminarProducto" class="modal-eliminar" hidden>
+    <div class="modal-eliminar-overlay"></div>
+
+    <div class="modal-eliminar-contenido"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="tituloModalEliminar">
+
+        <div class="modal-eliminar-icono">
+            <span>!</span>
+        </div>
+
+        <h2 id="tituloModalEliminar">Confirmar eliminación</h2>
+
+        <p>
+            ¿Estás seguro de que deseas eliminar este producto?
+        </p>
+
+        <div class="modal-eliminar-producto">
+            <strong id="modalProductoNombre">Nombre del producto</strong>
+            <small id="modalProductoId">ID: 0</small>
+        </div>
+
+        <p class="modal-eliminar-advertencia">
+            Esta acción no se puede deshacer.
+        </p>
+
+        <div class="modal-eliminar-acciones">
+            <button type="button" id="cancelarEliminarProducto">
+                Cancelar
+            </button>
+
+            <button type="button" id="confirmarEliminarProducto">
+                Eliminar producto
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal: Detalle del producto -->
+<div id="modalDetalleProducto" class="modal-eliminar" hidden>
+    <div class="modal-eliminar-overlay"></div>
+
+    <div class="modal-eliminar-contenido modal-detalle-producto"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="tituloDetalleProducto">
+
+        <div class="detalle-producto-header">
+            <div>
+                <h2 id="tituloDetalleProducto">Detalle del producto</h2>
+                <span id="detalleProductoId"></span>
+            </div>
+
+            <button type="button"
+                    id="cerrarDetalleProducto"
+                    class="btn-cerrar-detalle"
+                    aria-label="Cerrar">
+                &times;
+            </button>
+        </div>
+
+        <div class="detalle-producto-cuerpo">
+
+            <!-- Fotografía -->
+            <div class="detalle-producto-fotografia">
+                <img id="detalleProductoFoto"
+                     src=""
+                     alt="Fotografía del producto">
+
+                <span id="detalleProductoEstado"
+                      class="detalle-producto-estado">
+                    Disponible
+                </span>
+            </div>
+
+            <!-- Información general -->
+            <div class="detalle-producto-informacion">
+
+                <h3 id="detalleProductoNombre"></h3>
+
+                <div class="detalle-producto-datos">
+                    <div class="detalle-dato">
+                        <span>Marca</span>
+                        <strong id="detalleProductoMarca"></strong>
+                    </div>
+
+                    <div class="detalle-dato">
+                        <span>Color</span>
+                        <strong id="detalleProductoColor"></strong>
+                    </div>
+
+                    <div class="detalle-dato">
+                        <span>Categoría</span>
+                        <strong id="detalleProductoCategoria"></strong>
+                    </div>
+                </div>
+
+                <div class="detalle-producto-descripcion">
+                    <h4>Descripción</h4>
+                    <p id="detalleProductoDescripcion"></p>
+                </div>
+
+                <!-- Inventario -->
+                <div class="detalle-producto-stock">
+                    <div>
+                        <span>Cantidad disponible</span>
+                        <strong id="detalleProductoCantidad"></strong>
+                    </div>
+
+                    <div>
+                        <span>Ubicación</span>
+                        <strong id="detalleProductoUbicacion"></strong>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Precios -->
+        <div class="detalle-producto-precios">
+            <h3>Información de precios</h3>
+
+            <div class="detalle-precios-grid">
+                <div class="detalle-precio">
+                    <span>Precio de compra</span>
+                    <strong id="detallePrecioCompra"></strong>
+                </div>
+
+                <div class="detalle-precio">
+                    <span>Venta física</span>
+                    <strong id="detallePrecioFisico"></strong>
+                </div>
+
+                <div class="detalle-precio">
+                    <span>Redes sociales</span>
+                    <strong id="detallePrecioRedes"></strong>
+                </div>
+
+                <div class="detalle-precio">
+                    <span>Mercado Libre</span>
+                    <strong id="detallePrecioMercadoLibre"></strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="detalle-producto-acciones">
+            <button type="button"
+                    id="cerrarDetalleProductoFooter"
+                    class="btn-secondary">
+                Cerrar
+            </button>
+
+            <button type="button"
+                    id="editarDesdeDetalle"
+                    class="btn-primary">
+                <i class="fas fa-edit"></i>
+                Editar producto
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal personalizado para confirmar eliminación de categorías -->
+<div id="modalEliminarCategoria" class="modal-eliminar" hidden>
+
+    <div class="modal-eliminar-overlay"></div>
+
+    <div class="modal-eliminar-contenido modal-categoria-confirmacion"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="tituloEliminarCategoria">
+
+        <div class="icono-confirmacion-categoria">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+
+        <h2 id="tituloEliminarCategoria">
+            Confirmar eliminación
+        </h2>
+
+        <p>
+            Estás a punto de eliminar la siguiente categoría:
+        </p>
+
+        <strong id="nombreCategoriaEliminar"></strong>
+
+        <!-- Resumen de productos afectados -->
+        <div id="resumenProductosCategoria" class="resumen-productos-categoria" hidden>
+
+            <p>
+                <strong id="totalProductosCategoriaEliminar">0</strong>
+                productos están asociados a esta categoría.
+            </p>
+
+            <p>
+                Si continúas, estos productos permanecerán en el inventario,
+                pero quedarán sin categoría asignada.
+            </p>
+
+            <div id="listaProductosCategoriaEliminar"
+                 class="lista-productos-categoria">
+            </div>
+
+        </div>
+
+        <!-- Mensaje cuando no hay productos asociados -->
+        <p id="categoriaSinProductos" hidden>
+            Esta categoría no tiene productos asociados.
+        </p>
+
+        <p class="advertencia-eliminar-categoria">
+            ¿Estás seguro de que deseas continuar?
+        </p>
+
+        <div class="form-actions">
+            <button type="button"
+                    id="cancelarEliminarCategoria"
+                    class="btn-secondary">
+                Cancelar
+            </button>
+
+            <button type="button"
+                    id="confirmarEliminarCategoria"
+                    class="btn-primary btn-confirmar-eliminar">
+                Eliminar categoría
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal para gestionar categorías -->
+<div id="modalCategorias" class="modal-eliminar" hidden>
+    <div class="modal-eliminar-overlay"></div>
+
+    <div class="modal-eliminar-contenido modal-categorias-contenido"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="tituloModalCategorias">
+
+        <h2 id="tituloModalCategorias">Gestión de categorías</h2>
+        <p>Administra las categorías de los productos del inventario.</p>
+
+        <form id="categoriaForm">
+            <input type="hidden" id="categoriaId">
+
+            <div class="form-grid">
+                <div>
+                    <label for="categoriaNombre">Nombre De La Categoría</label>
+                    <input
+                        type="text"
+                        id="categoriaNombre"
+                        maxlength="100"
+                        required
+                    >
+                </div>
+
+                <div class="full">
+                    <label for="categoriaDescripcion">Descripción</label>
+                    <textarea
+                        id="categoriaDescripcion"
+                        rows="3"
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary" id="guardarCategoria">
+                    Guardar categoría
+                </button>
+
+                <button type="button" class="btn-secondary" id="cancelarEdicionCategoria">
+                    Limpiar
+                </button>
+            </div>
+        </form>
+
+        <p id="categoriaMessage" class="form-message"></p>
+
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="categoriasTableBody">
+                    <tr>
+                        <td colspan="4">Cargando categorías...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" id="cerrarModalCategorias">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+
 </section>
+
 
         <section id="usuarios" class="content-section">
     <div class="section-header">

@@ -4,7 +4,10 @@ from flask import Blueprint, request
 from mysql.connector import Error
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from database import bootstrap_database, get_connection
+if __package__:
+    from .database import bootstrap_database, get_connection
+else:
+    from database import bootstrap_database, get_connection
 
 
 users_roles_bp = Blueprint("users_roles", __name__)

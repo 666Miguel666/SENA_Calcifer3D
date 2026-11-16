@@ -1292,3 +1292,847 @@ button {
         font-size: 18px;
     }
 }
+
+/* ==========================================
+   FORMULARIO DE PRODUCTOS - CALCIFER3D
+========================================== */
+
+.product-form {
+    display: none;
+    background: #121212;
+    color: #ffffff;
+    border: 1px solid #FF6B00;
+    border-radius: 10px;
+    padding: 25px;
+    margin: 20px 0;
+}
+
+.product-form.active {
+    display: block;
+}
+
+.product-form h3 {
+    color: #FF6B00;
+    margin-bottom: 22px;
+    font-size: 20px;
+}
+
+.product-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.product-form .form-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.product-form .form-grid .full {
+    grid-column: 1 / -1;
+}
+
+.product-form label {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.product-form input,
+.product-form select,
+.product-form textarea {
+    width: 100%;
+    padding: 11px;
+    background: #ffffff;
+    color: #222222;
+    border: 1px solid #555555;
+    border-radius: 6px;
+    font-family: inherit;
+}
+
+.product-form input:focus,
+.product-form select:focus,
+.product-form textarea:focus {
+    outline: none;
+    border-color: #FF6B00;
+    box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.2);
+}
+
+.product-form .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.product-form .btn-primary {
+    background: #FF6B00;
+    color: #ffffff;
+    border: none;
+}
+
+.product-form .btn-primary:hover {
+    background: #e65f00;
+}
+
+.product-form .btn-secondary {
+    background: #333333;
+    color: #ffffff;
+    border: 1px solid #666666;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.product-form .form-message {
+    margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+    .product-form .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-form .form-grid .full {
+        grid-column: auto;
+    }
+
+    .product-form .form-actions {
+        flex-direction: column;
+    }
+}
+
+
+/* =========================================
+   MODAL DE ELIMINACIÓN DE PRODUCTOS
+   Identidad visual Calcifer3D
+========================================= */
+
+.modal-eliminar[hidden] {
+    display: none !important;
+}
+
+.modal-eliminar {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-eliminar-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(4px);
+}
+
+.modal-eliminar-contenido {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    padding: 30px;
+    background: #151515;
+    border: 1px solid #333;
+    border-top: 4px solid #FF6B00;
+    border-radius: 14px;
+    color: #FFFFFF;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+    animation: aparecerModalEliminar 0.2s ease-out;
+}
+
+.modal-eliminar-icono {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 107, 0, 0.12);
+    border: 2px solid #FF6B00;
+    color: #FF6B00;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.modal-eliminar-contenido h2 {
+    margin: 0 0 12px;
+    color: #FF6B00;
+    font-size: 22px;
+}
+
+.modal-eliminar-contenido p {
+    color: #CCCCCC;
+    line-height: 1.5;
+}
+
+.modal-eliminar-producto {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 22px 0;
+    padding: 15px;
+    background: #222222;
+    border: 1px solid #383838;
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+}
+
+.modal-eliminar-producto strong {
+    color: #FFFFFF;
+    font-size: 16px;
+}
+
+.modal-eliminar-producto small {
+    color: #AAAAAA;
+}
+
+.modal-eliminar-contenido .modal-eliminar-advertencia {
+    color: #FF9B70;
+    font-size: 13px;
+}
+
+.modal-eliminar-acciones {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.modal-eliminar-acciones button {
+    flex: 1;
+    min-height: 43px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 7px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+#cancelarEliminarProducto {
+    background: #383838;
+    color: #FFFFFF;
+}
+
+#cancelarEliminarProducto:hover {
+    background: #505050;
+}
+
+#confirmarEliminarProducto {
+    background: #FF6B00;
+    color: #FFFFFF;
+}
+
+#confirmarEliminarProducto:hover {
+    background: #E65F00;
+}
+
+.modal-eliminar-acciones button:hover {
+    transform: translateY(-2px);
+}
+
+.modal-eliminar-acciones button:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 3px;
+}
+
+@keyframes aparecerModalEliminar {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-eliminar-contenido {
+        padding: 22px;
+    }
+
+    .modal-eliminar-acciones {
+        flex-direction: column-reverse;
+    }
+}
+
+/* =========================================
+   BOTONES DE ACCIONES DEL INVENTARIO
+========================================= */
+
+.acciones-producto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 175px;
+}
+
+.acciones-producto button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 12px;
+    min-height: 36px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Botón editar */
+.btn-editar-producto {
+    background: #FF6B00;
+    border: 1px solid #FF6B00;
+    color: #FFFFFF;
+}
+
+.btn-editar-producto:hover {
+    background: #E65F00;
+    border-color: #E65F00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.25);
+}
+
+/* Botón eliminar */
+.btn-eliminar-producto {
+    background: #252525;
+    border: 1px solid #D94A4A;
+    color: #FFFFFF;
+}
+
+.btn-eliminar-producto:hover {
+    background: #8F2525;
+    border-color: #FF5555;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(217, 74, 74, 0.2);
+}
+
+/* Iconos */
+.icono-accion {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.acciones-producto button:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 3px;
+}
+
+.acciones-producto button:active {
+    transform: scale(0.96);
+}
+
+@media (max-width: 768px) {
+    .acciones-producto {
+        flex-direction: column;
+        min-width: 100px;
+    }
+
+    .acciones-producto button {
+        width: 100%;
+    }
+}
+
+
+/* =========================================
+   NOTIFICACIONES DEL INVENTARIO CALCIFER3D
+========================================= */
+
+#productMessage,
+#inventarioMessage {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    margin: 14px 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    animation: aparecerNotificacion 0.25s ease;
+}
+
+/* Mostrar notificación cuando tenga contenido */
+#productMessage:not(:empty),
+#inventarioMessage:not(:empty) {
+    display: flex;
+}
+
+/* Mensaje exitoso */
+#productMessage.success,
+#inventarioMessage.success {
+    background: rgba(34, 197, 94, 0.10);
+    border: 1px solid rgba(34, 197, 94, 0.45);
+    border-left: 4px solid #22C55E;
+    color: #A7F3D0;
+}
+
+/* Mensaje de error */
+#productMessage.error,
+#inventarioMessage.error {
+    background: rgba(239, 68, 68, 0.10);
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    border-left: 4px solid #EF4444;
+    color: #FCA5A5;
+}
+
+/* Mensaje informativo o de proceso */
+#productMessage:not(.success):not(.error):not(:empty),
+#inventarioMessage:not(.success):not(.error):not(:empty) {
+    background: rgba(255, 107, 0, 0.10);
+    border: 1px solid rgba(255, 107, 0, 0.40);
+    border-left: 4px solid #FF6B00;
+    color: #FFD0AD;
+}
+
+@keyframes aparecerNotificacion {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Vista previa de fotografía del producto */
+.product-photo-preview {
+    width: 100%;
+    max-width: 220px;
+    height: 180px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 1px dashed #666;
+    border-radius: 10px;
+    background-color: #1a1a1a;
+}
+
+.product-photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.product-photo-preview img[hidden] {
+    display: none;
+}
+#manageCategoriesButton {
+    width: auto;
+    height: auto;
+    padding: 8px 12px;
+    margin: 0;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    align-self: center;
+}
+
+/* Formulario del modal de categorías */
+.modal-categorias-contenido #categoriaForm .form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.modal-categorias-contenido #categoriaForm .form-grid > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.modal-categorias-contenido #categoriaForm label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 6px;
+}
+
+.modal-categorias-contenido #categoriaForm input,
+.modal-categorias-contenido #categoriaForm textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.modal-categorias-contenido #categoriaForm textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+/* =========================================
+   MODAL DE CONFIRMACIÓN - ELIMINAR CATEGORÍA
+========================================= */
+
+.modal-categoria-confirmacion {
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    border-top: 4px solid #FF6B00;
+}
+
+.icono-confirmacion-categoria {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: rgba(255, 107, 0, 0.15);
+    color: #FF6B00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+.modal-categoria-confirmacion h2 {
+    color: #FF6B00;
+    margin-bottom: 15px;
+}
+
+.modal-categoria-confirmacion p {
+    color: #cccccc;
+    margin-bottom: 12px;
+}
+
+#nombreCategoriaEliminar {
+    display: block;
+    color: #ffffff;
+    font-size: 18px;
+    margin: 15px 0;
+    overflow-wrap: anywhere;
+}
+
+.modal-categoria-confirmacion .advertencia-eliminar-categoria {
+    color: #ff9b66;
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+.modal-categoria-confirmacion .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.modal-categoria-confirmacion .btn-confirmar-eliminar {
+    background-color: #FF6B00;
+    color: #ffffff;
+    border: none;
+}
+
+.modal-categoria-confirmacion .btn-confirmar-eliminar:hover {
+    background-color: #e65f00;
+}
+
+.modal-categoria-confirmacion .btn-secondary {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #555555;
+}
+
+.modal-categoria-confirmacion .btn-secondary:hover {
+    background-color: #444444;
+}
+
+/* El modal de confirmación debe quedar encima del modal de categorías */
+#modalEliminarCategoria {
+    z-index: 10002;
+}
+
+
+/* Resumen de productos afectados al eliminar una categoría */
+.resumen-productos-categoria {
+    margin: 18px 0;
+    padding: 15px;
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.resumen-productos-categoria > p {
+    margin: 0 0 10px;
+    color: #fff;
+    line-height: 1.5;
+}
+
+#totalProductosCategoriaEliminar {
+    color: #FF6B00;
+    font-size: 20px;
+}
+
+.lista-productos-categoria {
+    max-height: 180px;
+    overflow-y: auto;
+    margin-top: 12px;
+    padding: 10px;
+    background: #151515;
+    border-radius: 7px;
+}
+
+.lista-productos-categoria ul {
+    margin: 0;
+    padding-left: 22px;
+}
+
+.lista-productos-categoria li {
+    color: #ddd;
+    padding: 5px 0;
+    border-bottom: 1px solid #333;
+    overflow-wrap: anywhere;
+}
+
+.lista-productos-categoria li:last-child {
+    border-bottom: none;
+}
+
+#categoriaSinProductos {
+    margin: 18px 0;
+    color: #ccc;
+}
+
+
+/* ==========================================
+   MODAL DETALLE DE PRODUCTO - CALCIFER3D
+========================================== */
+
+.modal-detalle-producto {
+    width: min(950px, 94%);
+    max-width: 950px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+    background: #181818;
+    border: 1px solid #393939;
+    border-radius: 14px;
+    color: #fff;
+    text-align: left;
+}
+
+.detalle-producto-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #383838;
+}
+
+.detalle-producto-header h2 {
+    margin: 0;
+    color: #FF6B00;
+    font-size: 24px;
+}
+
+#detalleProductoId {
+    display: block;
+    margin-top: 6px;
+    color: #999;
+    font-size: 13px;
+}
+
+.btn-cerrar-detalle {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 8px;
+    background: #292929;
+    color: #fff;
+    font-size: 27px;
+    cursor: pointer;
+}
+
+.btn-cerrar-detalle:hover {
+    background: #FF6B00;
+}
+
+.detalle-producto-cuerpo {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.4fr);
+    gap: 28px;
+    padding: 25px 0;
+}
+
+.detalle-producto-fotografia {
+    position: relative;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #242424;
+    border: 1px solid #383838;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.detalle-producto-fotografia img {
+    width: 100%;
+    max-height: 320px;
+    object-fit: contain;
+}
+
+.detalle-producto-estado {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #FF6B00;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.detalle-producto-estado.sin-stock {
+    background: #8b2929;
+}
+
+.detalle-producto-informacion h3 {
+    margin: 0 0 20px;
+    font-size: 23px;
+    color: #fff;
+}
+
+.detalle-producto-datos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.detalle-dato {
+    padding: 12px;
+    background: #242424;
+    border: 1px solid #363636;
+    border-radius: 8px;
+}
+
+.detalle-dato span,
+.detalle-producto-stock span,
+.detalle-precio span {
+    display: block;
+    margin-bottom: 7px;
+    color: #aaa;
+    font-size: 12px;
+}
+
+.detalle-dato strong,
+.detalle-producto-stock strong {
+    color: #fff;
+    font-size: 14px;
+}
+
+.detalle-producto-descripcion {
+    margin-top: 17px;
+}
+
+.detalle-producto-descripcion h4 {
+    margin: 0 0 8px;
+    color: #FF6B00;
+}
+
+.detalle-producto-descripcion p {
+    margin: 0;
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.detalle-producto-stock {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.detalle-producto-stock > div {
+    padding: 14px;
+    background: #242424;
+    border-left: 3px solid #FF6B00;
+    border-radius: 7px;
+}
+
+.detalle-producto-precios {
+    padding-top: 20px;
+    border-top: 1px solid #383838;
+}
+
+.detalle-producto-precios h3 {
+    margin: 0 0 15px;
+    color: #FF6B00;
+    font-size: 18px;
+}
+
+.detalle-precios-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.detalle-precio {
+    padding: 16px 12px;
+    background: #242424;
+    border: 1px solid #393939;
+    border-radius: 9px;
+}
+
+.detalle-precio strong {
+    color: #fff;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.detalle-producto-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+    padding-top: 18px;
+    border-top: 1px solid #383838;
+}
+
+@media (max-width: 700px) {
+    .detalle-producto-cuerpo {
+        grid-template-columns: 1fr;
+    }
+
+    .detalle-precios-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .detalle-producto-datos {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 450px) {
+    .modal-detalle-producto {
+        padding: 18px;
+    }
+
+    .detalle-producto-stock,
+    .detalle-precios-grid {
+        grid-template-columns: 1fr;
+    }
+}
