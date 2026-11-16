@@ -50,6 +50,57 @@ def archivo_imagen_permitido(nombre_archivo):
         and nombre_archivo.rsplit(".", 1)[1].lower()
         in ALLOWED_IMAGE_EXTENSIONS
     )
+
+def eliminar_fotografia_si_no_esta_en_uso(ruta_foto):
+    """
+    Elimina una fotografía del servidor únicamente si ningún
+    otro producto continúa utilizándola.
+    """
+
+    if not ruta_foto:
+        return
+
+    carpeta_relativa = "backend_python/static/uploads/productos/"
+
+    # Comprobar que la ruta pertenezca a la carpeta de imágenes.
+    ruta_normalizada = os.path.normpath(ruta_foto).replace("\\", "/")
+
+    if not ruta_normalizada.startswith(carpeta_relativa):
+        return
+
+    ruta_completa = os.path.realpath(
+        os.path.join(PROJECT_DIR, ruta_normalizada)
+    )
+
+    carpeta_segura = os.path.realpath(UPLOAD_FOLDER)
+
+    # Evitar que una ruta manipulada permita borrar archivos externos.
+    if os.path.commonpath([carpeta_segura, ruta_completa]) != carpeta_segura:
+        return
+
+    try:
+        # Comprobar si otro producto todavía utiliza esta fotografía.
+        with get_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT COUNT(*) FROM productos WHERE foto = %s",
+                    (ruta_foto,)
+                )
+                resultado = cursor.fetchone()
+
+        cantidad_usos = resultado[0] if resultado else 0
+
+        # Solo eliminar el archivo si ya no está asociado a ningún producto.
+        if cantidad_usos == 0 and os.path.isfile(ruta_completa):
+            os.remove(ruta_completa)
+
+    except (Error, OSError, ValueError) as exc:
+        app.logger.error(
+            "No se pudo eliminar la fotografía %s: %s",
+            ruta_foto,
+            exc
+        )
+
 @app.after_request
 def add_cors_headers(response):
     # Permite que el frontend haga peticiones a la API incluso
@@ -238,6 +289,7 @@ def crear_producto():
         }, 500)
 
 
+
 @app.route("/api/productos/<int:producto_id>", methods=["PUT"])
 def actualizar_producto(producto_id):
     """Actualiza un producto y permite reemplazar su fotografía."""
@@ -245,9 +297,7 @@ def actualizar_producto(producto_id):
     from werkzeug.utils import secure_filename
     import uuid
 
-    # Recibir los datos enviados mediante FormData.
     data = request.form
-
     nombre = str(data.get("nombre", "")).strip()
 
     if not nombre:
@@ -262,7 +312,6 @@ def actualizar_producto(producto_id):
             "message": "El nombre no puede superar 150 caracteres."
         }, 400)
 
-    # Revisar si se seleccionó una fotografía nueva.
     archivo = request.files.get("foto")
     ruta_guardada = None
     foto_nueva = None
@@ -278,11 +327,7 @@ def actualizar_producto(producto_id):
         extension = nombre_seguro.rsplit(".", 1)[1].lower()
         nombre_archivo = f"{uuid.uuid4().hex}.{extension}"
 
-        ruta_guardada = os.path.join(
-            UPLOAD_FOLDER,
-            nombre_archivo
-        )
-
+        ruta_guardada = os.path.join(UPLOAD_FOLDER, nombre_archivo)
         foto_nueva = (
             f"backend_python/static/uploads/productos/{nombre_archivo}"
         )
@@ -303,9 +348,7 @@ def actualizar_producto(producto_id):
             precio = Decimal(str(valor or 0))
 
             if not precio.is_finite() or precio < 0:
-                raise ValueError(
-                    f"El valor de {campo} no es válido."
-                )
+                raise ValueError(f"El valor de {campo} no es válido.")
 
             return precio
 
@@ -333,7 +376,6 @@ def actualizar_producto(producto_id):
         with get_connection() as connection:
             with connection.cursor() as cursor:
 
-                # Consultar si existe el producto y recuperar su fotografía.
                 cursor.execute(
                     "SELECT id, foto FROM productos WHERE id = %s",
                     (producto_id,)
@@ -348,15 +390,11 @@ def actualizar_producto(producto_id):
                     }, 404)
 
                 foto_anterior = producto_actual[1]
-
-                # Si no se seleccionó una imagen nueva, conservar la anterior.
                 foto_final = foto_nueva if foto_nueva else foto_anterior
 
-                # Guardar la nueva fotografía, si existe.
                 if archivo and archivo.filename:
                     archivo.save(ruta_guardada)
 
-                # Actualizar los datos del producto.
                 cursor.execute(
                     """
                     UPDATE productos
@@ -398,16 +436,7 @@ def actualizar_producto(producto_id):
 
         # Eliminar la fotografía anterior solo después de actualizar correctamente.
         if foto_nueva and foto_anterior:
-            carpeta_relativa = "backend_python/static/uploads/productos/"
-
-            if foto_anterior.startswith(carpeta_relativa):
-                ruta_anterior = os.path.join(
-                    PROJECT_DIR,
-                    foto_anterior
-                )
-
-                if os.path.isfile(ruta_anterior):
-                    os.remove(ruta_anterior)
+            eliminar_fotografia_si_no_esta_en_uso(foto_anterior)
 
         return json_response({
             "ok": True,
@@ -417,7 +446,6 @@ def actualizar_producto(producto_id):
 
     except Exception as exc:
 
-        # Si ocurrió un error, eliminar la fotografía nueva que se alcanzó a guardar.
         if ruta_guardada and os.path.exists(ruta_guardada):
             os.remove(ruta_guardada)
 
@@ -427,27 +455,34 @@ def actualizar_producto(producto_id):
             "detail": str(exc)
         }, 500)
 
+
 @app.route("/api/productos/<int:producto_id>", methods=["DELETE"])
 def eliminar_producto(producto_id):
-    """Elimina un producto existente de MySQL."""
+    """Elimina un producto de MySQL y su fotografía si ya no está en uso."""
+
+    foto_producto = None
 
     try:
         with get_connection() as connection:
             with connection.cursor() as cursor:
 
-                # Comprobar que el producto exista.
+                # Consultar el producto y recuperar la ruta de su fotografía.
                 cursor.execute(
-                    "SELECT id FROM productos WHERE id = %s",
+                    "SELECT id, foto FROM productos WHERE id = %s",
                     (producto_id,)
                 )
 
-                if cursor.fetchone() is None:
+                producto = cursor.fetchone()
+
+                if producto is None:
                     return json_response({
                         "ok": False,
                         "message": "El producto que intentas eliminar no existe."
                     }, 404)
 
-                # Eliminar el producto.
+                foto_producto = producto[1]
+
+                # Eliminar el registro del producto.
                 cursor.execute(
                     "DELETE FROM productos WHERE id = %s",
                     (producto_id,)
@@ -455,9 +490,13 @@ def eliminar_producto(producto_id):
 
             connection.commit()
 
+        # Eliminar la fotografía solamente si ningún otro producto la utiliza.
+        if foto_producto:
+            eliminar_fotografia_si_no_esta_en_uso(foto_producto)
+
         return json_response({
             "ok": True,
-            "message": "Producto eliminado correctamente.",
+            "message": "Producto y fotografía eliminados correctamente.",
             "id": producto_id
         })
 
@@ -467,6 +506,7 @@ def eliminar_producto(producto_id):
             "message": "No fue posible eliminar el producto.",
             "detail": str(exc)
         }, 500)
+
         
 
 @app.route("/api/categorias/<int:categoria_id>/productos", methods=["GET"])
