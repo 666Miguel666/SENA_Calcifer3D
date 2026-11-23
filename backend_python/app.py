@@ -139,6 +139,7 @@ def listar_productos():
                         p.color,
                         p.categoria_id,
                         p.cantidad,
+                        p.precio_compra,
                         p.precio_fisico,
                         p.precio_redes,
                         p.precio_mercadolibre,

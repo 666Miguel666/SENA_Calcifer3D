@@ -625,8 +625,10 @@
 
         <p id="categoriaMessage" class="form-message"></p>
 
-        <div class="table-container">
+        
+        <div class="table-container categorias-scroll">
             <table class="admin-table">
+
                 <thead>
                     <tr>
                         <th>ID</th>

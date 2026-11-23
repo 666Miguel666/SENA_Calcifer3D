@@ -2136,3 +2136,90 @@ button {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* Caja de categorías con desplazamiento interno */
+#modalCategorias .categorias-scroll {
+    width: 100%;
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid #444;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* Encabezados fijos durante el desplazamiento */
+#modalCategorias .categorias-scroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #242424;
+}
+
+/* GESTIÓN DE CATEGORÍAS RESPONSIVE */
+
+#modalCategorias {
+    padding: 12px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+}
+
+#modalCategorias .modal-categorias-contenido {
+    width: min(550px, 100%);
+    max-height: calc(100dvh - 24px);
+    height: auto;
+    margin: auto;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* El formulario conserva su espacio */
+#modalCategorias #categoriaForm,
+#modalCategorias #categoriaMessage,
+#modalCategorias > .modal-categorias-contenido > h2,
+#modalCategorias > .modal-categorias-contenido > p,
+#modalCategorias .modal-categorias-contenido > .form-actions {
+    flex-shrink: 0;
+}
+
+/* La tabla ocupa solamente el espacio disponible */
+#modalCategorias .categorias-scroll {
+    width: 100%;
+    min-height: 0;
+    max-height: 280px;
+    flex: 0 1 auto;
+    overflow-y: auto;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+
+/* Encabezados visibles */
+#modalCategorias .categorias-scroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #242424;
+}
+
+/* Ajuste para pantallas pequeñas */
+@media (max-height: 700px) {
+    #modalCategorias .modal-categorias-contenido {
+        padding: 16px;
+    }
+
+    #modalCategorias .categorias-scroll {
+        max-height: 180px;
+    }
+}
+
+@media (max-width: 600px) {
+    #modalCategorias .modal-categorias-contenido {
+        width: 100%;
+        padding: 14px;
+    }
+}
